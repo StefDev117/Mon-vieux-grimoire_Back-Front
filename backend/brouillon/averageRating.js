@@ -4,7 +4,7 @@ exports.likesSauces = (req, res, next) => {
     let like = req.body.like;
     let userId = req.body.userId;
     let sauceId = req.params.id;
-    //requette = mettre un like
+    //requette = mettre un like 
   
     if (like === 1) {
       //mettre a jour la sauce concerné, ajouter l'user à l'array usersLiked avec $push, incrémenter les likes de 1 avec methode $inc, inclue dans mongodb
