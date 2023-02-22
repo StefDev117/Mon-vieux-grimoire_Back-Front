@@ -102,13 +102,12 @@ exports.getAllBooks = (req, res, next) => {
 exports.getBestBooks = (req, res, next) => {
   Book.find()
     .then((books) => {
-      const cloneBooksClassed = [...books].sort((a, b) =>
-        b.averageRating < a.averageRating 
-      );
 
-      console.log(cloneBooksClassed);
-
-      res.status(200).json(books);
+      //cette constante classe mes books avec sort(de façon décroissante), puis garde les 3 books les mieux notés (avec splice(0, 3))
+      const bestBooksClassed = [...books].sort((a, b) => b.averageRating - a.averageRating 
+      ).splice(0, 3);
+    
+      res.status(200).json(bestBooksClassed);
     })
     .catch((error) => res.status(400).json({ error }));
 };
