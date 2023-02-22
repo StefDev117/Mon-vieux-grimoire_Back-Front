@@ -7,6 +7,7 @@ const stuffCtrl = require("../controllers/stuff");
 
 router.get("/", auth, stuffCtrl.getAllBooks);
 router.post("/", auth, multer, stuffCtrl.createBook);
+// router.post("/:id/rating", auth, stuffCtrl.postRating);
 router.get("/bestrating", stuffCtrl.getBestBooks)
 router.get("/:id", auth, stuffCtrl.getOneBook);
 router.put("/:id", auth, multer, stuffCtrl.modifyBook);

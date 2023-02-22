@@ -3,12 +3,24 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require('path');
 
+const dotEnv = require("dotenv").config();
+const userMGDB = (process.env.USER);
+const passwordMGDB = (process.env.PASSWORD);
+
+
 const stuffRoutes = require("./routes/stuff");
 const userRoutes = require("./routes/user");
 
 
+//DOT.ENV
+//password validator exige un nombre particulier de caractères, et peut exiger d'ajouter des
+//caractères spéciaux/chiffre/MAJ
 
-mongoose.connect('mongodb+srv://stefDev117:bordeaux33@mon-vieux-grimoire.nujfefc.mongodb.net/?retryWrites=true&w=majority',
+// HELMET Valider les headers des requêtes
+// Rate limit limite les injections SQL
+
+
+mongoose.connect(`mongodb+srv://${userMGDB}:${passwordMGDB}@mon-vieux-grimoire.nujfefc.mongodb.net/?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB Atlas réussie !!!'))

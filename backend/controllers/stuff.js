@@ -37,13 +37,14 @@ exports.modifyBook = (req, res, next) => {
           .status(401)
           .json({ message: "Vous n'êtes pas autorisé à modifier ce livre." });
       } else {
+
         if (bookObject.imageUrl) {
           const filename = book.imageUrl.split("/images/")[1];
           fs.unlink(`images/${filename}`, () => updateNewBook());
         } else {
           updateNewBook();
         }
-
+        
         // Ici je met ma fonction finale update dans une autre fonction, car je veux la passer dans 2 cas
         //(voir ci dessus), si je met à jour mon image(bookObject.imageUrl)
         // l'ancienne image sera suprrimé du dossier, autrement je passe juste ma fonction
@@ -110,4 +111,10 @@ exports.getBestBooks = (req, res, next) => {
       res.status(200).json(bestBooksClassed);
     })
     .catch((error) => res.status(400).json({ error }));
+};
+
+
+exports.postRating = (req, res, next) => {
+  // il va falloir utiliser updateOne pour un livre particulier (livre en cours)
+  // et poster une nouvelle note avec l'id et la note donné par l'user
 };
