@@ -10,11 +10,9 @@ module.exports = (req, res, next) => {
     req.auth = {
       userId: userId
     };
-    console.log("auth ok");
-    console.log(req.headers.authorization);
+    // console.log(req.headers.authorization);
     next();
   } catch (error) {
     res.status(401).json({ error });
-    console.log("error auth");
   }
 };
