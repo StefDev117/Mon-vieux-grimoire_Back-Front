@@ -37,14 +37,13 @@ exports.modifyBook = (req, res, next) => {
           .status(401)
           .json({ message: "Vous n'êtes pas autorisé à modifier ce livre." });
       } else {
-
         if (bookObject.imageUrl) {
           const filename = book.imageUrl.split("/images/")[1];
           fs.unlink(`images/${filename}`, () => updateNewBook());
         } else {
           updateNewBook();
         }
-        
+
         // Ici je met ma fonction finale update dans une autre fonction, car je veux la passer dans 2 cas
         //(voir ci dessus), si je met à jour mon image(bookObject.imageUrl)
         // l'ancienne image sera suprrimé du dossier, autrement je passe juste ma fonction
@@ -68,6 +67,12 @@ exports.modifyBook = (req, res, next) => {
     });
 };
 
+exports.getAllBooks = (req, res, next) => {
+  Book.find()
+    .then((books) => res.status(200).json(books))
+    .catch((error) => res.status(400).json({ error: "erreur" }));
+};
+
 exports.deleteBook = (req, res, next) => {
   Book.findOne({ _id: req.params.id })
     .then((book) => {
@@ -88,33 +93,81 @@ exports.deleteBook = (req, res, next) => {
     });
 };
 
-exports.getOneBook = (req, res, next) => {
-  Book.findOne({ _id: req.params.id })
-    .then((book) => res.status(200).json(book))
-    .catch((error) => res.status(400).json({ error }));
-};
-
-exports.getAllBooks = (req, res, next) => {
-  Book.find()
-    .then((books) => res.status(200).json(books))
-    .catch((error) => res.status(400).json({ error: "erreur" }));
-};
-
 exports.getBestBooks = (req, res, next) => {
   Book.find()
     .then((books) => {
+      res
+        .status(200)
+        .json(
+          [...books]
+            .sort((a, b) => b.averageRating - a.averageRating)
+            .splice(0, 3)
+        );
+      console.log(res);
+    })
+    .catch((err) => res.status(400).json({err}));
+};
 
-      //cette constante classe mes books avec sort(de façon décroissante), puis garde les 3 books les mieux notés (avec splice(0, 3))
-      const bestBooksClassed = [...books].sort((a, b) => b.averageRating - a.averageRating 
-      ).splice(0, 3);
-    
-      res.status(200).json(bestBooksClassed);
+exports.getOneBook = (req, res, next) => {
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      console.log(book), res.status(200).json(book);
     })
     .catch((error) => res.status(400).json({ error }));
 };
 
+// exports.getAllBooks = (req, res, next) => {
+//   Book.find()
+//     .then((books) => res.status(200).json(books))
+//     .catch((error) => res.status(400).json({ error: "erreur" }));
+// };
 
-exports.postRating = (req, res, next) => {
-  // il va falloir utiliser updateOne pour un livre particulier (livre en cours)
-  // et poster une nouvelle note avec l'id et la note donné par l'user
-};
+// exports.getBestBooks = (req, res, next) => {
+//   console.log(Book);
+//   Book.find()
+//     .then((books) => {
+
+//       //cette constante classe mes books avec sort(de façon décroissante), puis garde les 3 books les mieux notés (avec splice(0, 3))
+//       const bestBooksClassed = [...books].sort((a, b) => b.averageRating - a.averageRating
+//       ).splice(0, 3);
+
+//       return res.status(200).json(bestBooksClassed);
+//     })
+//     .catch((error) => res.status(400).json({ error }));
+// };
+
+// exports.postRating = (req, res, next) => {
+//   console.log("rating appelé");
+
+//   Book.findOne({ _id: req.params.id })
+//   .then((book) => {
+//     // if (book.userId !== req.auth.userId) {
+//       console.log(book.userId);
+//       console.log(req.auth.userId);
+//       // res
+//       //   .status(401)
+//       //   .json({ message: "Vous n'êtes pas autorisé à modifier cette note." });
+//     // } else {
+
+//     //   Ici je met ma fonction finale update dans une autre fonction, car je veux la passer dans 2 cas
+//     //   (voir ci dessus), si je met à jour mon image(bookObject.imageUrl)
+//     //   l'ancienne image sera suprrimé du dossier, autrement je passe juste ma fonction
+//     //     Book.updateOne(
+//     //       { _id: req.params.id },
+//     //       { ...bookObject, _id: req.params.id }
+//     //     )
+//     //       .then(() => {
+//     //         res.status(200).json({
+//     //           message:
+//     //             "note modifié avec succès",
+//     //         });
+//     //       })
+//     //       .catch((err) => res.status(401).json({ err }));
+//     // }
+//   })
+//   .catch((error) => {
+//     res.status(400).json({ error });
+//   });
+//   // il va falloir utiliser updateOne pour un livre particulier (livre en cours)
+//   // et poster une nouvelle note avec l'id et la note donné par l'user
+// };
