@@ -1,8 +1,10 @@
 const Book = require("../models/Book");
 const fs = require("fs"); //fs = file system
+const { log } = require("console");
 
 exports.createBook = (req, res, next) => {
   const bookObject = JSON.parse(req.body.book);
+
   delete bookObject.id;
   delete bookObject.userId;
 
@@ -28,10 +30,15 @@ exports.modifyBook = (req, res, next) => {
         }`,
       }
     : { ...req.body };
+    
+    // console.log(bookObject);
 
   delete bookObject.userId;
+
   Book.findOne({ _id: req.params.id })
     .then((book) => {
+      console.log(40);
+      console.log(bookObject);
       if (book.userId !== req.auth.userId) {
         res
           .status(401)
@@ -103,71 +110,51 @@ exports.getBestBooks = (req, res, next) => {
             .sort((a, b) => b.averageRating - a.averageRating)
             .splice(0, 3)
         );
-      console.log(res);
     })
-    .catch((err) => res.status(400).json({err}));
+    .catch((err) => res.status(400).json({ err }));
 };
 
 exports.getOneBook = (req, res, next) => {
   Book.findOne({ _id: req.params.id })
-    .then((book) => {
-      console.log(book), res.status(200).json(book);
-    })
+    .then((book) => res.status(200).json(book))
     .catch((error) => res.status(400).json({ error }));
 };
 
-// exports.getAllBooks = (req, res, next) => {
-//   Book.find()
-//     .then((books) => res.status(200).json(books))
-//     .catch((error) => res.status(400).json({ error: "erreur" }));
-// };
+exports.postRating = (req, res, next) => {
 
-// exports.getBestBooks = (req, res, next) => {
-//   console.log(Book);
-//   Book.find()
-//     .then((books) => {
+  const newRating = { ...req.body };
+  newRating.grade = newRating.rating;
+  delete newRating.rating;
+  //ici j'ajoute la valeur grade, car les datas envoyées par le front ne sont pas celles attendues
+  // et rajoute grade attendue à la place de rating
+  // userId: , rating:  à la place de userId: , grade
+  const test = "test";
 
-//       //cette constante classe mes books avec sort(de façon décroissante), puis garde les 3 books les mieux notés (avec splice(0, 3))
-//       const bestBooksClassed = [...books].sort((a, b) => b.averageRating - a.averageRating
-//       ).splice(0, 3);
-
-//       return res.status(200).json(bestBooksClassed);
-//     })
-//     .catch((error) => res.status(400).json({ error }));
-// };
-
-// exports.postRating = (req, res, next) => {
-//   console.log("rating appelé");
-
-//   Book.findOne({ _id: req.params.id })
-//   .then((book) => {
-//     // if (book.userId !== req.auth.userId) {
-//       console.log(book.userId);
-//       console.log(req.auth.userId);
-//       // res
-//       //   .status(401)
-//       //   .json({ message: "Vous n'êtes pas autorisé à modifier cette note." });
-//     // } else {
-
-//     //   Ici je met ma fonction finale update dans une autre fonction, car je veux la passer dans 2 cas
-//     //   (voir ci dessus), si je met à jour mon image(bookObject.imageUrl)
-//     //   l'ancienne image sera suprrimé du dossier, autrement je passe juste ma fonction
-//     //     Book.updateOne(
-//     //       { _id: req.params.id },
-//     //       { ...bookObject, _id: req.params.id }
-//     //     )
-//     //       .then(() => {
-//     //         res.status(200).json({
-//     //           message:
-//     //             "note modifié avec succès",
-//     //         });
-//     //       })
-//     //       .catch((err) => res.status(401).json({ err }));
-//     // }
-//   })
-//   .catch((error) => {
-//     res.status(400).json({ error });
-//   });
-//   // il va falloir utiliser updateOne pour un livre particulier (livre en cours)
-//   // et poster une nouvelle note avec l'id et la note donné par l'user
-// };
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      console.log(newRating);
+      const cloneBook = {...book._doc};
+      console.log(cloneBook);
+      cloneBook.ratings = [{...newRating}, ...book.ratings];
+      console.log(cloneBook);
+      console.log("cloneBook");
+      Book.updateOne(
+        { _id: req.params.id },
+        {...cloneBook, _id:req.params.id}
+      )
+        .then(() => {
+          console.log("updateOne appelé");
+          res.status(200).json({
+            message: "Objet modifié avec succès et images locales supprimées !",
+          });
+        })
+        .catch((err) => {
+          console.log("erreur 401");
+          res.status(401).json({ err: "erreure dans le process" });
+        });
+    })
+    .catch((error) => {
+      console.log("erreur 400 encore");
+      res.status(400).json({ error });
+    });
+};
