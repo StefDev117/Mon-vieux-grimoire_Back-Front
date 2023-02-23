@@ -1,6 +1,7 @@
 const Book = require("../models/Book");
 const fs = require("fs"); //fs = file system
-const { log } = require("console");
+
+
 
 exports.createBook = (req, res, next) => {
   const bookObject = JSON.parse(req.body.book);
@@ -30,9 +31,6 @@ exports.modifyBook = (req, res, next) => {
         }`,
       }
     : { ...req.body };
-    
-    // console.log(bookObject);
-
   delete bookObject.userId;
 
   Book.findOne({ _id: req.params.id })
@@ -132,15 +130,23 @@ exports.postRating = (req, res, next) => {
 
   Book.findOne({ _id: req.params.id })
     .then((book) => {
-      console.log(newRating);
+
       const cloneBook = {...book._doc};
-      console.log(cloneBook);
       cloneBook.ratings = [{...newRating}, ...book.ratings];
-      console.log(cloneBook);
-      console.log("cloneBook");
+
+
+      //ici on créer la fonction qui return avr(le nouveau averageRating)
+      // Le calcul si dessus, prend la some avec reduce qui accumule les elem.grade et le divise par leur length
+      // et Math.round * 100 / 100 permet d'arrondir le résultat à 2 chiffres après la virgule
+      function calcAverageGrade(arr) {
+        let avr = Math.round((arr.reduce((acc, elem) => acc + elem.grade, 0) / arr.length) * 100) / 100;
+        return avr;
+      };
+      cloneBook.averageRating = calcAverageGrade(cloneBook.ratings);
+
       Book.updateOne(
         { _id: req.params.id },
-        {...cloneBook, _id:req.params.id}
+        {...cloneBook, _id: req.params.id}
       )
         .then(() => {
           console.log("updateOne appelé");
@@ -150,11 +156,15 @@ exports.postRating = (req, res, next) => {
         })
         .catch((err) => {
           console.log("erreur 401");
-          res.status(401).json({ err: "erreure dans le process" });
+          res.status(401).json({err});
         });
     })
     .catch((error) => {
       console.log("erreur 400 encore");
       res.status(400).json({ error });
     });
+    // cette fonction marche bien, cependant, nous avons un problème à la création
+    // qui fait que les datas de l'objets sont affiches de façon undefined
+    // l'erreur provient surement du frontend et potentiellement d'un useEffect qui ne se
+    //recharge pas, comme pour l'erreur des bestRatingBooks
 };
