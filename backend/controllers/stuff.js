@@ -123,16 +123,14 @@ exports.postRating = (req, res, next) => {
   //ici j'ajoute la valeur grade, car les datas envoyées par le front ne sont pas celles attendues
   // (rating au lieu de grade)
   // userId: , rating:  à la place de userId: , grade
-  const test = "test";
 
   Book.findOne({ _id: req.params.id })
     .then((book) => {
-
       const cloneBook = {...book._doc};
       cloneBook.ratings = [{...newRating}, ...book.ratings];
 
 
-      //ici on créer la fonction qui return avr(le nouveau averageRating)
+      //ici on créé la fonction qui return avr(le nouveau averageRating)
       // Le calcul si dessus, prend la some avec reduce qui accumule les elem.grade et le divise par leur length
       // et Math.round * 100 / 100 permet d'arrondir le résultat à 2 chiffres après la virgule
       function calcAverageGrade(arr) {

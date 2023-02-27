@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require('path');
+const rateLimit = require("express-rate-limit");
 
 const dotEnv = require("dotenv").config();
 const userMGDB = (process.env.USER);
@@ -18,6 +19,13 @@ const userRoutes = require("./routes/user");
 
 // HELMET Valider les headers des requêtes
 // Rate limit limite les injections SQL
+
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 100, //15 min
+  max: 100
+  //Limit each Ip to 100 requests in 15 minutes
+});
 
 
 mongoose.connect(`mongodb+srv://${userMGDB}:${passwordMGDB}@mon-vieux-grimoire.nujfefc.mongodb.net/?retryWrites=true&w=majority`,
@@ -45,9 +53,9 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 // app.use(bodyParser.json());
-
-app.use("/api/books", stuffRoutes);
-app.use("/api/auth", userRoutes);
+// app.use(limiter);
+app.use("/api/books", limiter, stuffRoutes);
+app.use("/api/auth", limiter, userRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;
