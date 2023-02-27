@@ -1,7 +1,14 @@
 
+
+Dans: Mon-vieux-grimoire_Back-Front/frontend/src/pages/Book/Book.jsx
 Line 30:6:
 
 Changement ancien tableau, ancien = [] => nouveau = [params.id] le nouveau tableau va permettre de renvoyerles données dès que params.id aura une nouvelle valeur.
 Ps: ici params.id = la fin de notre route après /livre/:id ;
 
+
+
 L'ancien problème résolu fût que nous avions un problème quand nous cliquions sur un livre contenu dans la partie bestRating(la route se mettait à jour, mais les données restaient les mêmes(anciens livres))
+
+
+Chercher l'erreur de refresh de notation dans BookRatingForm.jsx

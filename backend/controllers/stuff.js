@@ -58,10 +58,7 @@ exports.modifyBook = (req, res, next) => {
             { ...bookObject, _id: req.params.id }
           )
             .then(() => {
-              res.status(200).json({
-                message:
-                  "Objet modifié avec succès et images locales supprimée !",
-              });
+              res.status(200).json(bookObject);
             })
             .catch((err) => res.status(401).json({ err }));
         }
@@ -124,7 +121,7 @@ exports.postRating = (req, res, next) => {
   newRating.grade = newRating.rating;
   delete newRating.rating;
   //ici j'ajoute la valeur grade, car les datas envoyées par le front ne sont pas celles attendues
-  // et rajoute grade attendue à la place de rating
+  // (rating au lieu de grade)
   // userId: , rating:  à la place de userId: , grade
   const test = "test";
 
@@ -146,13 +143,11 @@ exports.postRating = (req, res, next) => {
 
       Book.updateOne(
         { _id: req.params.id },
-        {...cloneBook, _id: req.params.id}
-      )
+        {...cloneBook}
+        )
         .then(() => {
           console.log("updateOne appelé");
-          res.status(200).json({
-            message: "Objet modifié avec succès et images locales supprimées !",
-          });
+          res.status(200).json(cloneBook);
         })
         .catch((err) => {
           console.log("erreur 401");
@@ -163,8 +158,4 @@ exports.postRating = (req, res, next) => {
       console.log("erreur 400 encore");
       res.status(400).json({ error });
     });
-    // cette fonction marche bien, cependant, nous avons un problème à la création
-    // qui fait que les datas de l'objets sont affiches de façon undefined
-    // l'erreur provient surement du frontend et potentiellement d'un useEffect qui ne se
-    //recharge pas, comme pour l'erreur des bestRatingBooks
 };
