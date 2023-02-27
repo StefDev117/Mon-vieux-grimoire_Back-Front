@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const userCtrl = require("../controllers/user");
-
-router.post("/signup", userCtrl.createUser);
+const password = require("../middleware/password");
+// ajouter middleware password à signup
+router.post("/signup", password, userCtrl.createUser);
 router.post("/login", userCtrl.loginUser);
 
 

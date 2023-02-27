@@ -13,20 +13,20 @@ const stuffRoutes = require("./routes/stuff");
 const userRoutes = require("./routes/user");
 
 
-//DOT.ENV
 //password validator exige un nombre particulier de caractères, et peut exiger d'ajouter des
 //caractères spéciaux/chiffre/MAJ
 
 // HELMET Valider les headers des requêtes
-// Rate limit limite les injections SQL
 
+
+//          RATE LIMIT PART /////////////////////
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 100, //15 min
-  max: 100
-  //Limit each Ip to 100 requests in 15 minutes
+  max: 100 //Limit each Ip to 1000 requests per windowMS
 });
 
+//          RATE LIMIT END /////////////////////
 
 mongoose.connect(`mongodb+srv://${userMGDB}:${passwordMGDB}@mon-vieux-grimoire.nujfefc.mongodb.net/?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
