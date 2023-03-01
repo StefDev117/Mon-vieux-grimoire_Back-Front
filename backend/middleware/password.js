@@ -13,11 +13,7 @@ passwordSchema
 .has().not().spaces()
 .is().not().oneOf(["Passw0rd", "Password123"]);
 
-console.log("--->CONTENU passwordSchema");
-console.log(passwordSchema);
-
 //vérification de la qualité du mdp comparé au Schema
-
 module.exports = (req, res, next) => {
     if(passwordSchema.validate(req.body.password)) {
 

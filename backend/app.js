@@ -8,7 +8,6 @@ const dotEnv = require("dotenv").config();
 const userMGDB = (process.env.USER);
 const passwordMGDB = (process.env.PASSWORD);
 
-
 const stuffRoutes = require("./routes/stuff");
 const userRoutes = require("./routes/user");
 
@@ -19,14 +18,13 @@ const userRoutes = require("./routes/user");
 // HELMET Valider les headers des requêtes
 
 
-//          RATE LIMIT PART /////////////////////
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 100, //15 min
-  max: 100 //Limit each Ip to 1000 requests per windowMS
+const limiterDatas = rateLimit({
+  windowMs: 15 * 60 * 1000, //15 min
+  max: 100, //Limit each Ip to 100 requests per 15min
+  message: "Trop de requêtes API lancées (> 100) dans les 15 dernières minutes."
 });
 
-//          RATE LIMIT END /////////////////////
 
 mongoose.connect(`mongodb+srv://${userMGDB}:${passwordMGDB}@mon-vieux-grimoire.nujfefc.mongodb.net/?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
@@ -54,8 +52,8 @@ app.use((req, res, next) => {
 app.use(express.json());
 // app.use(bodyParser.json());
 // app.use(limiter);
-app.use("/api/books", limiter, stuffRoutes);
-app.use("/api/auth", limiter, userRoutes);
+app.use("/api/books", limiterDatas, stuffRoutes);
+app.use("/api/auth", userRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 module.exports = app;

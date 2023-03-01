@@ -12,3 +12,34 @@ L'ancien problème résolu fût que nous avions un problème quand nous cliquion
 
 
 Chercher l'erreur de refresh de notation dans BookRatingForm.jsx
+
+
+// Sécurisation:
+
+- Hashage emails?;
+
+- MongoDB a la possibilité d'utiliser un module appelé Mongo Mask. Il peut être utilisé comme ceci sur l’application : var mongoMask = require('mongo-mask'). Sur la base de données, MongoDB a des accès en lecture seule qui peuvent être spécifiés dans le code. 
+
+Cloner et générer des masques de données utilisant plusieurs bases de données. En utilisant le même schéma, une base de données supplémentaire utilisée pour récupérer des informations peut contenir des données masquées pour les colonnes sensibles déjà présentes.
+
+
+
+- Les attaques cross-site scripting ou XSS sont faites pour prendre le contrôle de votre navigateur. Un attaquant qui y parvient aura potentiellement accès à vos cookies et à vos sessions qui peuvent contenir des données sensibles ! Ces attaques peuvent également permettre d’apporter des modifications non autorisées à une application web et créer des liens qui vous mèneront vers des sites malveillants !.
+
+
+
+Ce que j'ai ajouté:
+
+- Password qui oblige l'utilisateur à créer un mot de passe complexe,
+avec au moins une Maj/Min, un chiffre, un caractère spécial et une longueur
+minimum de 8, maximum de 30 (pour éviter l'injection de code);
+
+- Ajout de DOTENV, qui permet de stocker mot de passe et l'utilisateur 
+Mongoose dans un fichier .env, camouflé à l'envoie sur Git grâce à gitignore;
+
+- RateLimit librairie d'express qui limite le nombre de requêtes à l'api:
+par exemple   
+windowMs: 15 * 60 * 1000, 
+max: 100
+Qui permet de n'envoyer que 100 requêtes API en 15 minutes, si la limite
+est atteinte les requête seront bloquées durant 15 minutes.
