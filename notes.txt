@@ -43,3 +43,6 @@ windowMs: 15 * 60 * 1000,
 max: 100
 Qui permet de n'envoyer que 100 requêtes API en 15 minutes, si la limite
 est atteinte les requête seront bloquées durant 15 minutes.
+
+
+//Ajouter HELMET

@@ -7,8 +7,8 @@ const RedisStore = require('rate-limit-redis');
 
 const limiterUserLogin = rateLimit({
   windowMs: 5 * 60 * 1000, 
-  max: 5, 
-  message: 'Top de tentatives, réessayez dans 5 minutes'
+  max: 10, 
+  message: 'Trop de tentatives, réessayez dans 5 minutes'
 });
 
 router.post("/signup", password, userCtrl.createUser);
