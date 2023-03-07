@@ -21,8 +21,8 @@ const userRoutes = require("./routes/user");
 
 const limiterDatas = rateLimit({
   windowMs: 15 * 60 * 1000, //15 min
-  max: 100, //Limit each Ip to 100 requests per 15min
-  message: "Trop de requêtes API lancées (> 100) dans les 15 dernières minutes."
+  max: 500, //Limit each Ip to 500 requests per 15min
+  message: "Trop de requêtes API lancées 500 dans les 15 dernières minutes."
 });
 
 

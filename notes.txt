@@ -46,3 +46,17 @@ est atteinte les requête seront bloquées durant 15 minutes.
 
 
 //Ajouter HELMET
+
+CHoses à faire rapport soutenance;
+
+Supprimer les images à l'envoie;
+
+Remettre la base de données au propre;
+
+Ajouter average rating 
+
+noter user et login pour mongoDB pour l'examinateur
+
+ajouter la fonction average rating quand j'ajoute un livre
+
+Slides;
