@@ -3,7 +3,6 @@ const router = express.Router();
 const userCtrl = require("../controllers/user");
 const password = require("../middleware/password");
 const rateLimit = require("express-rate-limit");
-const RedisStore = require('rate-limit-redis');
 
 const limiterUserLogin = rateLimit({
   windowMs: 5 * 60 * 1000, 

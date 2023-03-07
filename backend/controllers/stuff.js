@@ -6,7 +6,6 @@ const fs = require("fs"); //fs = file system
 exports.createBook = (req, res, next) => {
   const bookObject = JSON.parse(req.body.book);
 
-  delete bookObject.id;
   delete bookObject.userId;
 
   const book = new Book({
@@ -15,7 +14,10 @@ exports.createBook = (req, res, next) => {
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
+    averageRating: req.body.rating ? req.body.rating : 0
   });
+
+
   book
     .save()
     .then(() => res.status(201).json({ message: "Objet enregistré ! " }))
@@ -31,6 +33,7 @@ exports.modifyBook = (req, res, next) => {
         }`,
       }
     : { ...req.body };
+    
   delete bookObject.userId;
 
   Book.findOne({ _id: req.params.id })
@@ -82,7 +85,6 @@ exports.deleteBook = (req, res, next) => {
         res.status(401).json({ message: "Non autorisé" });
       } else {
         const filename = book.imageUrl.split("/images/")[1];
-
         fs.unlink(`images/${filename}`, () =>
           Book.deleteOne({ _id: req.params.id })
             .then(() => res.status(200).json({ message: "Livre supprimé !" }))
@@ -100,6 +102,9 @@ exports.getBestBooks = (req, res, next) => {
     .then((books) => {
       res
         .status(200)
+        // Pour récupérer les meilleures livres, je clone mon tableau de datas;
+        // je les classe de façon décroissante avec sort, et splice me permet de
+        //récupérer les 3 premiers livres.
         .json(
           [...books]
             .sort((a, b) => b.averageRating - a.averageRating)

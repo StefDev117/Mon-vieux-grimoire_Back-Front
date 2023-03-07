@@ -1,12 +1,12 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require('path');
 const rateLimit = require("express-rate-limit");
 
 const dotEnv = require("dotenv").config();
-const userMGDB = (process.env.USER);
-const passwordMGDB = (process.env.PASSWORD);
+
+
+const completeRoute = (process.env.COMPLETEROUTE);
 
 const stuffRoutes = require("./routes/stuff");
 const userRoutes = require("./routes/user");
@@ -21,12 +21,12 @@ const userRoutes = require("./routes/user");
 
 const limiterDatas = rateLimit({
   windowMs: 15 * 60 * 1000, //15 min
-  max: 500, //Limit each Ip to 500 requests per 15min
-  message: "Trop de requêtes API lancées 500 dans les 15 dernières minutes."
+  max: 300, //Limit each Ip to 500 requests per 15min
+  message: "Trop de requêtes API lancées (300 dans les 15 dernières minutes)."
 });
 
 
-mongoose.connect(`mongodb+srv://${userMGDB}:${passwordMGDB}@mon-vieux-grimoire.nujfefc.mongodb.net/?retryWrites=true&w=majority`,
+mongoose.connect(completeRoute,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB Atlas réussie !!!'))
