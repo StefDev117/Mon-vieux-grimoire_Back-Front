@@ -13,5 +13,4 @@ const limiterUserLogin = rateLimit({
 router.post("/signup", password, userCtrl.createUser);
 router.post("/login", limiterUserLogin, userCtrl.loginUser);
 
-
 module.exports = router;

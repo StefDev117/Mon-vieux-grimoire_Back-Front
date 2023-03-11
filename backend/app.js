@@ -5,16 +5,10 @@ const rateLimit = require("express-rate-limit");
 
 const dotEnv = require("dotenv").config();
 
-
 const completeRoute = (process.env.COMPLETEROUTE);
 
 const stuffRoutes = require("./routes/stuff");
 const userRoutes = require("./routes/user");
-
-
-//password validator exige un nombre particulier de caractères, et peut exiger d'ajouter des
-//caractères spéciaux/chiffre/MAJ
-
 
 const limiterDatas = rateLimit({
   windowMs: 15 * 60 * 1000, //15 min
@@ -45,8 +39,6 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-// app.use(bodyParser.json());
-// app.use(limiter);
 app.use("/api/books", limiterDatas, stuffRoutes);
 app.use("/api/auth", userRoutes);
 app.use("/images", express.static(path.join(__dirname, "images")));
