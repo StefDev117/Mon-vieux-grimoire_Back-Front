@@ -15,13 +15,10 @@ const userRoutes = require("./routes/user");
 //password validator exige un nombre particulier de caractères, et peut exiger d'ajouter des
 //caractères spéciaux/chiffre/MAJ
 
-// HELMET Valider les headers des requêtes
-
-
 
 const limiterDatas = rateLimit({
   windowMs: 15 * 60 * 1000, //15 min
-  max: 300, //Limit each Ip to 500 requests per 15min
+  max: 300, //Limit each Ip to 300 requests per 15min
   message: "Trop de requêtes API lancées (300 dans les 15 dernières minutes)."
 });
 
@@ -33,8 +30,6 @@ mongoose.connect(completeRoute,
   .catch(() => console.log('Connexion à MongoDB Atlas échouée !'));
 
 const app = express();
-
-
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

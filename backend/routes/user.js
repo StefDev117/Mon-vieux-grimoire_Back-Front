@@ -7,7 +7,7 @@ const rateLimit = require("express-rate-limit");
 const limiterUserLogin = rateLimit({
   windowMs: 5 * 60 * 1000, 
   max: 10, 
-  message: 'Trop de tentatives, réessayez dans 5 minutes'
+  message: 'Trop de tentatives de connexion, réessayez dans 5 minutes'
 });
 
 router.post("/signup", password, userCtrl.createUser);
